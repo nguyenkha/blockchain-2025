@@ -1,1 +1,1 @@
-# Các công nghệ mới trong phát triển phần mềm - CQ2019/3
+# Các công nghệ mới trong phát triển phần mềm - CQ2020/3
