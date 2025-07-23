@@ -66,7 +66,7 @@
 					</p>
 				</section>
 				<section>
-					<h2>Create a bitcoin transaction</h2>
+					<h2>Create a BTC transaction</h2>
 					<p>
 						<ol>
 							<li>Lấy danh sách UTXO của ví</li>
@@ -95,7 +95,7 @@ const tx = new bitcore.Transaction()
 					</p>
 				</section>
 				<section>
-					<h2>Create a ethereum transaction</h2>
+					<h2>Create a ETH transaction</h2>
 					<p>
 					<ol>
 						<li>Lấy thứ tự giao dịch (nonce) của ví và phí</li>
@@ -106,10 +106,10 @@ const tx = new bitcore.Transaction()
 					</p>
 					<pre><code data-trim data-noescape>
 const fee = await provider.getFeeData();
+const tx = { to: "0xRecipientAddress", value: ethers.utils.parseEther("0.01") };
 const signedTx = await wallet.sendTransaction({
-	to: "0xRecipientAddress",
-	value: ethers.utils.parseEther("0.01"),
-	gasLimit: await wallet.estimateGas(tx),
+	...tx,
+	gasLimit: await wallet.estimateGas(),
 	maxFeePerGas: fee.maxFeePerGas,
 	maxPriorityFeePerGas: fee.maxPriorityFeePerGas,
 });
