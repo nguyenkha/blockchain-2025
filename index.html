@@ -17,18 +17,18 @@
 		<div class="reveal">
 			<div class="slides">
 				<section>
-					<h2>Một số xu hướng phát triển blockchain năm 2024</h2>
+					<h2>Một số xu hướng phát triển blockchain năm 2025</h2>
 					<h5>Các công nghệ mới trong phát triển phần mềm</h5>
 					<p>
 						<small>Trợ giảng: <a href="mailto:dnkha@fit.hcmus.edu.vn">Đỗ Nguyên Kha</a></small><br>
-						<small>Học kỳ 2/2023-2024 @ FIT-HCMUS</small>
+						<small>Học kỳ 3/2024-2025 @ FIT-HCMUS</small>
 					</p>
 					<p><small><a href="?print-pdf">[Bản in]</a></small></p>
 				</section>
 				<section>
 					<h2>Kha Do</h2>
 					<p>Teaching Assistant @ <a href="https://www.fit.hcmus.edu.vn/vn/">FIT-HCMUS</a></p>
-					<p>Former Blockchain Engineer @ <a href="https://www.liquid.com/">FTX/Liquid/QUOINE</a></p>
+					<p>Former Blockchain Engineer @ <a href="https://www.liquid.com/">FTX JP/Liquid/QUOINE/Custodiem</a></p>
 				</section>
 				<section>
 					<h2>Từ chối trách nhiệm</h2>
@@ -44,6 +44,7 @@
 						<li>Smart Contract</li>
 						<li>ERC20 - Token Standard</li>
 						<li>ERC721 - Non-Fungible Token Standard</li>
+						<li>Multisig</li>
 						<li>DeFi</li>
 						<li>Layer 2</li>
 					</ul>
@@ -58,6 +59,32 @@
 					<p>Consensus (sự đồng thuận) được dựa trên những cơ chế: Proof-of-Word (PoW), Proof-of-Stake (PoS) khi dữ liệu được thêm thêm vào blockchain</p>
 				</section>
 				<section>
+					<h2>Nodes</h2>
+					<img width="75%" src="https://cdn.prod.website-files.com/6426d50ebe43d95b9d9a014b/6780fc8bd912802209ab0ed8_transaction-verification_flow-prev5.png">
+					<p>
+						<small>Nguồn <a href="https://www.unchained.com/blog/what-is-a-bitcoin-node">Unchained</a></small>
+					</p>
+				</section>
+				<section>
+					<h2>Create a bitcoin transaction</h2>
+					<p>
+						<ol>
+							<li>Lấy danh sách UTXO của ví</li>
+							<li>Tạo giao dịch</li>
+							<li>Ký bằng khóa riêng</li>
+							<li>Gửi giao dịch lên node</li>
+						</ol>
+					</p>
+					<pre><code data-trim data-noescape>
+const tx = new bitcore.Transaction()
+	.from(utxos)
+	.to(toAddress, amountToSend)
+	.change(fromAddress)
+	.fee(fee)
+	.sign(privateKey);
+					</code></pre>
+				</section>
+				<section>
 					<h2>Crypotocurrency</h2>
 					<p>Tiền mã hóa</p>
 					<p>
@@ -66,6 +93,27 @@
 					<p>
 						<small>Nguồn <a href="https://blog.rsisecurity.com/wp-content/uploads/2018/10/ccss-cryptocoins-1170x594.jpg">RSI Security</a></small>
 					</p>
+				</section>
+				<section>
+					<h2>Create a ethereum transaction</h2>
+					<p>
+					<ol>
+						<li>Lấy thứ tự giao dịch (nonce) của ví và phí</li>
+						<li>Tạo giao dịch</li>
+						<li>Ký bằng khóa riêng</li>
+						<li>Gửi giao dịch lên node</li>
+					</ol>
+					</p>
+					<pre><code data-trim data-noescape>
+const fee = await provider.getFeeData();
+const signedTx = await wallet.sendTransaction({
+	to: "0xRecipientAddress",
+	value: ethers.utils.parseEther("0.01"),
+	gasLimit: await wallet.estimateGas(tx),
+	maxFeePerGas: fee.maxFeePerGas,
+	maxPriorityFeePerGas: fee.maxPriorityFeePerGas,
+});
+					</code></pre>
 				</section>
 				<section>
 					<h2>Smart Contract</h2>
@@ -85,6 +133,23 @@
 					</p>
 				</section>
 				<section>
+					<h2>ERC20</h2>
+					<pre><code data-trim data-noescape>
+interface IERC20 {
+	function totalSupply() external view returns (uint256);
+	function balanceOf(address account) external view returns (uint256);
+	function allowance(address owner, address spender) external view returns (uint256);
+
+	function transfer(address to, uint256 amount) external returns (bool);
+	function approve(address spender, uint256 amount) external returns (bool);
+	function transferFrom(address from, address to, uint256 amount) external returns (bool);
+
+	event Transfer(address indexed from, address indexed to, uint256 value);
+	event Approval(address indexed owner, address indexed spender, uint256 value);
+}
+					</code></pre>
+				</section>
+				<section>
 					<h2>NFT</h2>
 					<p>Non-Fungible Token</p>
 					<p>Crypto Kitties, Open Sea...</p>
@@ -94,6 +159,24 @@
 					<p>
 						Tham khảo: <a href="https://docs.openzeppelin.com/contracts/2.x/erc721">OpenZeppelin ERC721</a>
 					</p>
+				</section>
+				<section>
+					<h2>ERC721</h2>
+					<pre><code data-trim data-noescape>
+interface IERC721 {
+	function balanceOf(address owner) external view returns (uint256);
+	function ownerOf(uint256 tokenId) external view returns (address);
+	function safeTransferFrom(address from, address to, uint256 tokenId) external;
+	function transferFrom(address from, address to, uint256 tokenId) external;
+	function approve(address to, uint256 tokenId) external;
+	function getApproved(uint256 tokenId) external view returns (address);
+	function setApprovalForAll(address operator, bool approved) external;
+	function isApprovedForAll(address owner, address operator) external view returns (bool);
+	event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+	event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+	event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
+}
+					</code></pre>
 				</section>
 				<section>
 					<h2>DeFi</h2>
@@ -142,6 +225,24 @@
 					</p>
 				</section>
 				<section>
+					<h2>Multisig</h2>
+					<p>Multisig (Multisignature) nghĩa là “đa chữ ký” – một giao dịch chỉ được chấp thuận nếu nhiều bên cùng ký xác nhận.
+					</p>
+					<p>
+						<ul>
+							<li>Bitcoin: Dùng qua các script multisig.</li>
+							<li>Ethereum: Dùng smart contract như Gnosis Safe.</li>
+						</ul>
+					</p>
+					<p>
+						<img width="25%"
+							src="http://bitcoinwiki.org/wp-content/uploads/2023/12/400px-Multisig.png">
+					</p>
+					<p>
+						<small>Nguồn <a href="https://bitcoinwiki.org/wiki/multisignature">Bitcoinwiki</a></small>
+					</p>
+				</section>
+				<section>
 					<h2>CBDC</h2>
 					<p>Central Bank Digital Currency: Bahamas, Jamaica và Nigeria. Các nước Brazil, China, the châu Âu, Ấn Độ và vương quốc Anh đang thử nghiệm các giải pháp CBDC</p>
 					<p>
@@ -152,8 +253,23 @@
 					</p>
 				</section>
 				<section>
+					<h2>Real-World Assets (RWA) On-Chain</h2>
+					<p>
+						<ul>
+							<li>Lãi suất trái phiếu Mỹ cao → stablecoin thuật toán suy yếu → dòng tiền đổ sang T-bills tokenized</li>
+							<li>Các định chế lớn vào cuộc: BlackRock, JPMorgan, Franklin Templeton, Securitize</li>
+							<li>Các L1/L2 tích hợp RWA: Avalanche, Polygon, Ethereum</li>
+						</ul>
+					</p>
+				</section>
+				<section>
 					<h2>AI</h2>
-					<p><a href="https://www.ibm.com/topics/blockchain-ai">What is blockchain and artificial intelligence (AI)?</a></p>
+					<p><a href="https://www.forbes.com/sites/bernardmarr/2025/01/15/ai-meets-blockchainthe-next-frontier-of-cryptocurrency/">AI Meets Blockchain - The Next Frontier Of Cryptocurrency</a></p>
+					<p>
+						AI và blockchain đang dần kết hợp để tạo ra hệ sinh thái tiền mã hóa thông minh, minh bạch và hiệu quả hơn. Các ứng dụng
+						nổi bật gồm: giao dịch tự động, phát hiện gian lận, quản lý DAO, và tạo tài sản kỹ thuật số bằng AI. Tuy nhiên, vẫn còn
+						thách thức về quyền riêng tư, khả năng mở rộng và pháp lý cần được giải quyết để công nghệ này phát triển bền vững.
+					</p>
 				</section>
 				<section>
 					<h1>Hỏi/Đáp</h1>
